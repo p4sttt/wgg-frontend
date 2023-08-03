@@ -9,9 +9,11 @@ function ErrorPage() {
       <VStack>
         <Heading>This page don't exist</Heading>
         <Text>this page has changed its address or never existed</Text>
-        <Button mt={4} rightIcon={<ArrowDownRight size={24} strokeWidth={1.5} />}>
-          <Link to='/'>Go Home</Link>
-        </Button>
+        <Link to='/'>
+          <Button mt={4} rightIcon={<ArrowDownRight size={24} strokeWidth={1.5} />}>
+            Go Home
+          </Button>
+        </Link>
       </VStack>
     </Center>
   );

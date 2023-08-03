@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 import {
   Button,
@@ -31,12 +32,27 @@ function Home() {
   });
 
   const linkColor = useColorModeValue('teal.500', 'teal.400');
+  const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
+
+  const validate = () => {
+    let isValid = true;
+
+    if (!username.value) {
+      setUsername({ ...username, error: 'This field is required' });
+      isValid = false;
+    }
+    if (!roomId.value) {
+      setRoomId({ ...roomId, error: 'This field is required' });
+      isValid = false;
+    }
+
+    return isValid;
+  };
 
   const joinRoom = () => {
-    if (!username.value) setUsername({ ...username, error: 'This field is required' });
-    if (!roomId.value) setRoomId({ ...roomId, error: 'This field is required' });
+    const isValid = validate();
 
-    if (!username.error && !roomId.error) {
+    if (isValid) {
       console.log({
         username,
         roomId,
@@ -47,8 +63,10 @@ function Home() {
   return (
     <Container maxW={400}>
       <VStack justify='start' align='start'>
-        <Heading>Start watch together</Heading>
-        <Text>To start watching baths together, you need to create a room for this</Text>
+        <Heading size='lg'>Start watch together</Heading>
+        <Text color={textColor}>
+          To start watching baths together, you need to create a room for this
+        </Text>
         <VStack mt={4} spacing={2} w='100%'>
           <FormControl isInvalid={!!username.error}>
             <FormLabel>Username</FormLabel>
@@ -82,7 +100,10 @@ function Home() {
             Join room
           </Button>
           <Text fontSize='sm'>
-            Do you need your own room? <Link color={linkColor}>Create room</Link>
+            Do you need your own room?{' '}
+            <Link as='span' color={linkColor}>
+              <RouterLink to='/create'>Create Room</RouterLink>
+            </Link>
           </Text>
         </VStack>
       </VStack>

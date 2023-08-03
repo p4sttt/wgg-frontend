@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { ChakraProvider } from '@chakra-ui/react';
 
-import { ErrorPage, Home, Root } from '~/routes';
+import { Create, ErrorPage, Home, Root } from '~/routes';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +14,10 @@ const router = createBrowserRouter([
         path: '',
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'create',
+        element: <Create />,
       },
     ],
   },
