@@ -1,14 +1,29 @@
-import { Button, Heading, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+
+import { ChakraProvider } from '@chakra-ui/react';
+
+import { ErrorPage, Home, Root } from '~/routes';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '',
+        index: true,
+        element: <Home />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <VStack>
-      <Heading>{count}</Heading>
-      <Button onClick={() => setCount((prev) => prev + 1)}>Clicl me</Button>
-    </VStack>
+    <ChakraProvider>
+      <RouterProvider router={router} />
+    </ChakraProvider>
   );
 }
 

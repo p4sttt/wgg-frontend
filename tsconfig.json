@@ -23,7 +23,7 @@
     /* Import alises */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "~/*": ["src/*"]
     }
   },
   "include": ["src"],
