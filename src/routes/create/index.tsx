@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import {
@@ -23,50 +22,28 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-interface formState<T> {
-  value: T;
-  error: string;
+import { useForm } from '~/hooks';
+
+type Lifetime = '1' | '3' | '7' | 'inf';
+
+interface CreateRoomForm {
+  roomName: string;
+  maxUsetsCount: number;
+  lifetime: Lifetime;
 }
 
-type lifetime = '1' | '3' | '7' | 'inf';
-
 function Create() {
-  const [roomName, setRoomName] = useState<formState<string>>({
-    value: '',
-    error: '',
-  });
-  const [maxUsersCount, setMaxUsersCount] = useState<formState<number>>({
-    value: 10,
-    error: '',
-  });
-  const [lifetime, setLifetime] = useState<formState<lifetime>>({
-    value: '1',
-    error: '',
-  });
-
   const linkColor = useColorModeValue('teal.500', 'teal.400');
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
 
-  const validate = () => {
-    let isValid = true;
-    if (!roomName.value) {
-      setRoomName({ ...roomName, error: 'This field is required' });
-      isValid = false;
-    }
-
-    return isValid;
-  };
+  const form = useForm<CreateRoomForm>({
+    roomName: '',
+    maxUsetsCount: 5,
+    lifetime: '1',
+  });
 
   const createRoom = () => {
-    const isValid = validate();
-
-    if (isValid) {
-      console.log({
-        roomName,
-        maxUsersCount,
-        lifetime,
-      });
-    }
+    console.log(form.values);
   };
 
   return (
@@ -77,28 +54,28 @@ function Create() {
           Create and customize your own room, invite friends and enjoy watching together
         </Text>
         <VStack mt={4} spacing={2} w='100%'>
-          <FormControl isInvalid={!!roomName.error.length}>
+          <FormControl isInvalid={!!form.errors.roomName}>
             <FormLabel>Room Name</FormLabel>
             <Input
               type='text'
-              value={roomName.value}
-              onChange={(e) => setRoomName({ ...roomName, value: e.target.value })}
+              value={form.values.roomName}
+              onChange={(e) => form.setFieldValue('roomName', e.target.value)}
             />
-            {!roomName.error.length && (
+            {!form.errors.roomName && (
               <FormHelperText>
                 Only you and the members of the room will see the name of the room.
               </FormHelperText>
             )}
-            <FormErrorMessage>{roomName.error}</FormErrorMessage>
+            <FormErrorMessage>{form.errors.roomName}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!maxUsersCount.error.length}>
+          <FormControl isInvalid={!!form.errors.maxUsetsCount}>
             <FormLabel>Max Users Count</FormLabel>
             <NumberInput
-              defaultValue={maxUsersCount.value}
+              defaultValue={form.values.maxUsetsCount}
               max={20}
               min={2}
               clampValueOnBlur={true}
-              onChange={(count) => setMaxUsersCount({ ...maxUsersCount, value: Number(count) })}
+              onChange={(count) => form.setFieldValue('maxUsetsCount', Number(count))}
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -106,18 +83,18 @@ function Create() {
                 <NumberDecrementStepper />
               </NumberInputStepper>
             </NumberInput>
-            {!maxUsersCount.error.length && (
+            {!form.errors.maxUsetsCount && (
               <FormHelperText>
                 Only you and the members of the room will see the name of the room.
               </FormHelperText>
             )}
-            <FormErrorMessage>{maxUsersCount.error}</FormErrorMessage>
+            <FormErrorMessage>{form.errors.maxUsetsCount}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!lifetime.error.length}>
+          <FormControl isInvalid={!!form.errors.lifetime}>
             <FormLabel>Delete Room After</FormLabel>
             <RadioGroup
-              defaultValue={lifetime.value}
-              onChange={(value) => setLifetime({ ...lifetime, value: value as lifetime })}
+              defaultValue={form.values.lifetime}
+              onChange={(value) => form.setFieldValue('lifetime', value as Lifetime)}
             >
               <VStack justify='start' align='start'>
                 <Radio value='1'>1 day</Radio>
@@ -126,13 +103,13 @@ function Create() {
                 <Radio value='inf'>do not delete</Radio>
               </VStack>
             </RadioGroup>
-            {!lifetime.error.length && (
+            {!form.errors.lifetime && (
               <FormHelperText>
                 This room will be automatically deleted after the selected period and you will not
                 be able to access it
               </FormHelperText>
             )}
-            <FormErrorMessage>{lifetime.error}</FormErrorMessage>
+            <FormErrorMessage>{form.errors.lifetime}</FormErrorMessage>
           </FormControl>
         </VStack>
         <VStack align='start' w='100%' mt={4}>
