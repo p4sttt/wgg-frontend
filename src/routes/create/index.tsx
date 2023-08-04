@@ -37,14 +37,32 @@ function Create() {
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
 
   const form = useForm<CreateRoomForm>({
-    roomName: '',
-    maxUsetsCount: 5,
-    lifetime: '1',
-  });
+    initialValues: {
+      roomName: '',
+      maxUsetsCount: 5,
+      lifetime: '1',
+    },
+    onSubmit: () => {
+      console.log(form.values);
+    },
+    validate: () => {
+      let isValid = true;
+      if (!form.values.roomName) {
+        form.setFieldError('roomName', 'This is a required field');
+        isValid = false;
+      }
+      if (!form.values.maxUsetsCount) {
+        form.setFieldError('maxUsetsCount', 'This is a required field');
+        isValid = false;
+      }
+      if (!form.values.lifetime) {
+        form.setFieldError('lifetime', 'This is a required field');
+        isValid = false;
+      }
 
-  const createRoom = () => {
-    console.log(form.values);
-  };
+      return isValid;
+    },
+  });
 
   return (
     <Container maxW={400}>
@@ -113,7 +131,7 @@ function Create() {
           </FormControl>
         </VStack>
         <VStack align='start' w='100%' mt={4}>
-          <Button colorScheme='blue' w='100%' onClick={createRoom}>
+          <Button colorScheme='blue' w='100%' onClick={form.handleSubmit}>
             Create room
           </Button>
           <Text fontSize='sm'>

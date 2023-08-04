@@ -27,13 +27,27 @@ function Home() {
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
 
   const form = useForm<JoinRoomForm>({
-    username: '',
-    roomId: '',
-  });
+    initialValues: {
+      username: '',
+      roomId: '',
+    },
+    validate: () => {
+      let isValid = true;
+      if (!form.values.username) {
+        form.setFieldError('username', 'This is a required field');
+        isValid = false;
+      }
+      if (!form.values.roomId) {
+        form.setFieldError('roomId', 'This is a required field');
+        isValid = false;
+      }
 
-  const joinRoom = () => {
-    console.log(form.values);
-  };
+      return isValid;
+    },
+    onSubmit: () => {
+      console.log(form.values);
+    },
+  });
 
   return (
     <Container maxW={400}>
@@ -64,14 +78,14 @@ function Home() {
               value={form.values.roomId}
               onChange={(e) => form.setFieldValue('roomId', e.target.value)}
             />
-            {!form.values.roomId && (
+            {!form.errors.roomId && (
               <FormHelperText>Enter the id of the room you want to enter.</FormHelperText>
             )}
-            <FormErrorMessage>{form.values.roomId}</FormErrorMessage>
+            <FormErrorMessage>{form.errors.roomId}</FormErrorMessage>
           </FormControl>
         </VStack>
         <VStack align='start' mt={4} w='100%'>
-          <Button colorScheme='blue' w='100%' onClick={joinRoom}>
+          <Button colorScheme='blue' w='100%' onClick={form.handleSubmit}>
             Join room
           </Button>
           <Text fontSize='sm'>
