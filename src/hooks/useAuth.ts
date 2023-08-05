@@ -16,14 +16,16 @@ export const useAuth = () => {
   ]);
 
   const login = (data: LoginData) =>
-    new Promise((resolve, reject) => {
+    new Promise<void>((resolve, reject) => {
       setTimeout(() => {
+        console.log('here');
         setToken('sometoken');
         setUser({
           username: 'someusername',
           email: 'someemail',
         });
-      }, 1000);
+        resolve();
+      }, 200);
     });
 
   const logout = () => {
@@ -32,10 +34,13 @@ export const useAuth = () => {
     return redirect('/');
   };
 
+  const isAuth = !!token;
+
   return {
     token,
     user,
     login,
     logout,
+    isAuth,
   };
 };
