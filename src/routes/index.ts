@@ -1,6 +1,7 @@
-import ErrorPage from './error-page';
-import Home from './home';
-import Root from './root';
-import Create from './create'
-
-export { Home, Root, ErrorPage, Create };
+export * from './Create';
+export * from './Home';
+export * from './Login';
+export * from './Register';
+export * from './NotFound';
+export * from './Profile';
+export * from './Layout';

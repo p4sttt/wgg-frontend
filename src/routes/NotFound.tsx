@@ -3,7 +3,7 @@ import { ArrowDownRight } from 'tabler-icons-react';
 
 import { Button, Center, Heading, Text, VStack } from '@chakra-ui/react';
 
-function ErrorPage() {
+export const ErrorPage = () => {
   return (
     <Center h='100vh'>
       <VStack>
@@ -17,6 +17,6 @@ function ErrorPage() {
       </VStack>
     </Center>
   );
-}
+};
 
 export default ErrorPage;

@@ -22,7 +22,7 @@ interface JoinRoomForm {
   roomId: string;
 }
 
-function Home() {
+export const  Home = () => {
   const linkColor = useColorModeValue('teal.500', 'teal.400');
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
 

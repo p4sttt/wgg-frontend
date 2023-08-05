@@ -14,20 +14,30 @@ import {
 } from '@chakra-ui/react';
 
 import { useAuth, useForm } from '~/hooks';
-import { LoginData } from '~/types';
+
+interface RegisterData {
+  email: string;
+  username: string;
+  password: string;
+}
 
 interface LoginFormProps {
   onLogin?: () => void;
   onLoginError?: () => void;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {}, onLoginError = () => {} }) => {
+export const RegisterForm: FC<LoginFormProps> = ({
+  onLogin = () => {},
+  onLoginError = () => {},
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
 
   const { login } = useAuth();
-  const form = useForm<LoginData>({
+
+  const form = useForm<RegisterData>({
     initialValues: {
+      username: '',
       email: '',
       password: '',
     },
@@ -44,6 +54,10 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {}, onLoginError
     },
     validate: () => {
       let isValid = true;
+      if (!form.values.username) {
+        form.setFieldError('username', 'This is a required field');
+        isValid = false;
+      }
       if (!form.values.email) {
         form.setFieldError('email', 'This is a required field');
         isValid = false;
@@ -60,6 +74,15 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {}, onLoginError
   return (
     <VStack justify='start' align='start'>
       <VStack mt={4} spacing={4} w='100%'>
+        <FormControl isInvalid={!!form.errors.username}>
+          <FormLabel>Username</FormLabel>
+          <Input
+            type='text'
+            value={form.values.username}
+            onChange={(e) => form.setFieldValue('username', e.target.value)}
+          />
+          <FormErrorMessage>{form.errors.username}</FormErrorMessage>
+        </FormControl>
         <FormControl isInvalid={!!form.errors.email}>
           <FormLabel>Email</FormLabel>
           <Input
@@ -94,10 +117,10 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {}, onLoginError
           isLoading={isLoading}
           loadingText='loading'
         >
-          Log In
-        </Button>
-        <Button variant='outline' colorScheme='blue' w='100%' onClick={() => redirect('/register')}>
           Sign Up
+        </Button>
+        <Button variant='outline' colorScheme='blue' w='100%' onClick={() => redirect('/login')}>
+          Log In
         </Button>
       </VStack>
     </VStack>

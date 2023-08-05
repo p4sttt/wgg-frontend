@@ -40,7 +40,7 @@ interface CreateRoomForm {
   lifetime: Lifetime;
 }
 
-function Create() {
+export const Create = () => {
   const linkColor = useColorModeValue('teal.500', 'teal.400');
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
 
@@ -87,7 +87,7 @@ function Create() {
     <>
       <Container maxW={400}>
         <VStack justify='start' align='start'>
-          <Heading size='lg'>Create own room</Heading>
+          <Heading size='lg'>Create room</Heading>
           <Text color={textColor}>
             Create and customize your own room, invite friends and enjoy watching together
           </Text>
@@ -163,7 +163,12 @@ function Create() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Login</ModalHeader>
+          <ModalHeader>
+            <Heading size='lg'>You not authorized</Heading>
+            <Text color={textColor} fontWeight='normal' fontSize='md'>
+              to create a room that does not have an unlimited lifetime, you need to log in
+            </Text>
+          </ModalHeader>
           <ModalBody>
             <LoginForm />
           </ModalBody>
