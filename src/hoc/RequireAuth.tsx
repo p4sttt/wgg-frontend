@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { useAuth } from '~/hooks';
 
@@ -8,7 +8,22 @@ interface RequireAuthProps {
   withoutAuth?: ReactNode;
 }
 
-export const RequireAuth = ({ withAuth, withoutAuth = <Navigate to='/login' /> }: RequireAuthProps) => {
+const WithoutAuthByDefault = () => {
+  const { pathname } = useLocation();
+  return (
+    <Navigate
+      to='/login'
+      state={{
+        from: pathname,
+      }}
+    />
+  );
+};
+
+export const RequireAuth = ({
+  withAuth,
+  withoutAuth = <WithoutAuthByDefault />,
+}: RequireAuthProps) => {
   const { isAuth } = useAuth();
 
   if (isAuth) {

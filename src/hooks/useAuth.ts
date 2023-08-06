@@ -1,7 +1,14 @@
-import { redirect } from 'react-router-dom';
-
 import { useToken, useUser } from '~/stores';
 import { LoginData } from '~/types';
+
+interface LoginParams {
+  data: LoginData;
+  callback?: () => void;
+}
+
+interface LogoutParams {
+  callback?: () => void;
+}
 
 export const useAuth = () => {
   const [token, setToken, removeToken] = useToken((state) => [
@@ -15,23 +22,23 @@ export const useAuth = () => {
     state.removeUser,
   ]);
 
-  const login = (data: LoginData) =>
-    new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        console.log('here');
-        setToken('sometoken');
-        setUser({
-          username: 'someusername',
-          email: 'someemail',
-        });
-        resolve();
-      }, 200);
+  const login = ({ data, callback = () => {} }: LoginParams) => {
+    const { email } = data;
+
+    setToken('sometoken');
+    setUser({
+      username: email,
+      email: email,
     });
 
-  const logout = () => {
+    callback();
+  };
+
+  const logout = ({ callback = () => {} }: LogoutParams) => {
     removeToken();
     removeUser();
-    return redirect('/');
+
+    callback();
   };
 
   const isAuth = !!token;

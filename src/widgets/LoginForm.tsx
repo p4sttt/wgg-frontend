@@ -21,8 +21,7 @@ interface LoginFormProps {
   onLoginError?: () => void;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {}, onLoginError = () => {} }) => {
-  const [isLoading, setIsLoading] = useState(false);
+export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {} }) => {
   const [show, setShow] = useState(false);
 
   const { login } = useAuth();
@@ -32,15 +31,10 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {}, onLoginError
       password: '',
     },
     onSubmit: () => {
-      setIsLoading(true);
-      login(form.values)
-        .then(() => {
-          onLogin();
-        })
-        .catch(() => {
-          onLoginError();
-        })
-        .finally(() => setIsLoading(false));
+      login({
+        data: form.values,
+        callback: onLogin,
+      });
     },
     validate: () => {
       let isValid = true;
@@ -87,13 +81,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {}, onLoginError
         </FormControl>
       </VStack>
       <VStack align='start' w='100%' mt={4}>
-        <Button
-          colorScheme='blue'
-          w='100%'
-          onClick={form.handleSubmit}
-          isLoading={isLoading}
-          loadingText='loading'
-        >
+        <Button colorScheme='blue' w='100%' onClick={form.handleSubmit} loadingText='loading'>
           Log In
         </Button>
         <Button variant='outline' colorScheme='blue' w='100%' onClick={() => redirect('/register')}>
