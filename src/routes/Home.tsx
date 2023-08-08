@@ -15,14 +15,14 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-import { useForm } from '~/hooks';
+import { useForm } from '~/utils/hooks';
 
 interface JoinRoomForm {
   username: string;
   roomId: string;
 }
 
-export const  Home = () => {
+export const Home = () => {
   const linkColor = useColorModeValue('teal.500', 'teal.400');
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
 
@@ -98,6 +98,6 @@ export const  Home = () => {
       </VStack>
     </Container>
   );
-}
+};
 
 export default Home;

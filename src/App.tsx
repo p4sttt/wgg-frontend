@@ -2,8 +2,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { ChakraProvider } from '@chakra-ui/react';
 
-import { RequireAuth } from '~/hoc';
 import { Create, ErrorPage, Home, Layout, Login, Profile, Register } from '~/routes';
+import { RequireAuth } from '~/utils/hocs';
 
 const router = createBrowserRouter([
   {

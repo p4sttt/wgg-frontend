@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { useAuth } from '~/hooks';
+import { useAuth } from '~/utils/hooks';
 
 interface RequireAuthProps {
   withAuth: ReactNode;
@@ -24,9 +24,9 @@ export const RequireAuth = ({
   withAuth,
   withoutAuth = <WithoutAuthByDefault />,
 }: RequireAuthProps) => {
-  const { isAuth } = useAuth();
+  const { isAuthorized } = useAuth();
 
-  if (isAuth) {
+  if (isAuthorized) {
     return withAuth;
   } else {
     return withoutAuth;

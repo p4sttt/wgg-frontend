@@ -13,7 +13,7 @@ export const Login = () => {
   return (
     <Container maxW={400}>
       <Heading>Log In</Heading>
-      <LoginForm onLogin={() => navigate(fromPage)} />
+      <LoginForm onSuccess={() => navigate(fromPage)} />
     </Container>
   );
 };

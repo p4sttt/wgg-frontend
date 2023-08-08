@@ -1,6 +1,6 @@
 import { Box, Button, Heading, Text } from '@chakra-ui/react';
 
-import { useAuth } from '~/hooks';
+import { useAuth } from '~/utils/hooks';
 
 export const Profile = () => {
   const { user, logout } = useAuth();
@@ -9,7 +9,7 @@ export const Profile = () => {
     <Box>
       <Heading>Profile</Heading>
       <Text>{user?.username}</Text>
-      <Button colorScheme='red' onClick={logout}>
+      <Button colorScheme='red' onClick={() => logout()}>
         Log Out
       </Button>
     </Box>

@@ -29,7 +29,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { useAuth, useForm } from '~/hooks';
+import { useAuth, useForm } from '~/utils/hooks';
 import { LoginForm } from '~/widgets';
 
 type Lifetime = '1' | '3' | '7' | 'inf';
@@ -73,10 +73,10 @@ export const Create = () => {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isAuth } = useAuth();
+  const { isAuthorized } = useAuth();
 
   const handleRadioCahnge = (value: Lifetime) => {
-    if (value == 'inf' && !isAuth) {
+    if (value == 'inf' && !isAuthorized) {
       onOpen();
     } else {
       form.setFieldValue('lifetime', value);
@@ -177,6 +177,6 @@ export const Create = () => {
       </Modal>
     </>
   );
-}
+};
 
 export default Create;

@@ -13,7 +13,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import { useAuth, useForm } from '~/hooks';
+import { useAuth, useForm } from '~/utils/hooks';
 
 interface RegisterData {
   email: string;
@@ -22,18 +22,13 @@ interface RegisterData {
 }
 
 interface LoginFormProps {
-  onLogin?: () => void;
-  onLoginError?: () => void;
+  onSuccess?: () => void;
 }
 
-export const RegisterForm: FC<LoginFormProps> = ({
-  onLogin = () => {},
-  onLoginError = () => {},
-}) => {
+export const RegisterForm: FC<LoginFormProps> = ({ onSuccess = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
-
-  const { login } = useAuth();
+  const { signup } = useAuth();
 
   const form = useForm<RegisterData>({
     initialValues: {
@@ -41,16 +36,17 @@ export const RegisterForm: FC<LoginFormProps> = ({
       email: '',
       password: '',
     },
-    onSubmit: () => {
+    onSubmit: async () => {
       setIsLoading(true);
-      login(form.values)
-        .then(() => {
-          onLogin();
-        })
-        .catch(() => {
-          onLoginError();
-        })
-        .finally(() => setIsLoading(false));
+
+      const registerData = {
+        email: form.values.email,
+        username: form.values.username,
+        password: form.values.password,
+      };
+      await signup(registerData, onSuccess);
+
+      setIsLoading(false);
     },
     validate: () => {
       let isValid = true;

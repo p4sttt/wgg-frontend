@@ -13,28 +13,33 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import { useAuth, useForm } from '~/hooks';
-import { LoginData } from '~/types';
+import { UserLoginData } from '~/types';
+import { useAuth, useForm } from '~/utils/hooks';
 
 interface LoginFormProps {
-  onLogin?: () => void;
-  onLoginError?: () => void;
+  onSuccess?: () => void;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {} }) => {
+export const LoginForm: FC<LoginFormProps> = ({ onSuccess = () => {} }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
-
   const { login } = useAuth();
-  const form = useForm<LoginData>({
+
+  const form = useForm<UserLoginData>({
     initialValues: {
       email: '',
       password: '',
     },
-    onSubmit: () => {
-      login({
-        data: form.values,
-        callback: onLogin,
-      });
+    onSubmit: async () => {
+      setIsLoading(true);
+
+      const loginData = {
+        email: form.values.email,
+        password: form.values.password,
+      };
+      await login(loginData, onSuccess);
+
+      setIsLoading(false);
     },
     validate: () => {
       let isValid = true;
@@ -59,6 +64,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {} }) => {
           <Input
             type='email'
             value={form.values.email}
+            required
             onChange={(e) => form.setFieldValue('email', e.target.value)}
           />
           <FormErrorMessage>{form.errors.email}</FormErrorMessage>
@@ -69,6 +75,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {} }) => {
             <Input
               type={show ? 'text' : 'password'}
               value={form.values.password}
+              required
               onChange={(e) => form.setFieldValue('password', e.target.value)}
             />
             <InputRightElement mr={1.5}>
@@ -81,7 +88,13 @@ export const LoginForm: FC<LoginFormProps> = ({ onLogin = () => {} }) => {
         </FormControl>
       </VStack>
       <VStack align='start' w='100%' mt={4}>
-        <Button colorScheme='blue' w='100%' onClick={form.handleSubmit} loadingText='loading'>
+        <Button
+          colorScheme='blue'
+          w='100%'
+          onClick={form.handleSubmit}
+          isLoading={isLoading}
+          loadingText='loading'
+        >
           Log In
         </Button>
         <Button variant='outline' colorScheme='blue' w='100%' onClick={() => redirect('/register')}>
