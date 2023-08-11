@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Box } from 'tabler-icons-react';
 
-import { Heading, Skeleton, VStack } from '@chakra-ui/react';
+import { Center, SimpleGrid, Skeleton, Text, VStack } from '@chakra-ui/react';
 
 import { RoomCard } from '~/components';
 import { Room } from '~/types';
@@ -37,13 +38,27 @@ export const RoomsList = () => {
     );
   }
 
+  if (!rooms.length) {
+    return (
+      <Box>
+        <Center>
+          <Text>Nothing interesting there</Text>
+        </Center>
+      </Box>
+    );
+  }
+
   return (
-    <VStack>
-      {rooms.length ? (
-        rooms.map((room) => <RoomCard key={room.id} roomName={room.name} createdAt={room.createdAt} />)
-      ) : (
-        <Heading size='sm'>nothing intresting here</Heading>
-      )}
-    </VStack>
+    <SimpleGrid
+      columns={{
+        sm: 2,
+        md: 3,
+      }}
+      spacing={10}
+    >
+      {rooms.map((room) => (
+        <RoomCard name={room.name} createdAt={room.createdAt} />
+      ))}
+    </SimpleGrid>
   );
 };

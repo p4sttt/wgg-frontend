@@ -3,7 +3,7 @@ export interface Room {
   userId?: string;
   name: string;
   maxUsersCount: number;
-  createdAt: Date;
-  deleteAt?: Date;
+  createdAt: string;
+  deleteAt?: string;
   link?: string;
 }

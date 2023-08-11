@@ -9,10 +9,15 @@ export const Layout = () => {
 
   return (
     <Box>
+      {/* HEADER */}
       <Header />
+
+      {/* MAIN CONTENT */}
       <Container mt={24} maxW='container.lg'>
         <Outlet />
       </Container>
+
+      {/* FOOTER */}
       <Box mt={24} px={4} pb={4}>
         <Center>
           <Text color={footerColor}>Watch Together. 2023</Text>

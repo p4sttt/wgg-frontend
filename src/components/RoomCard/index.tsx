@@ -1,21 +1,25 @@
 import { FC } from 'react';
 
-import { Card, CardBody, Heading, Text } from '@chakra-ui/react';
+import { Card, CardBody, CardFooter, Heading, Text } from '@chakra-ui/react';
 
 interface RoomCardProps {
-  roomName: string;
-  createdAt: Date;
+  name: string;
+  createdAt: string;
 }
 
-export const RoomCard: FC<RoomCardProps> = ({ roomName, createdAt }) => {
+export const RoomCard: FC<RoomCardProps> = ({ name, createdAt }) => {
+  const createdAtDate = new Date(createdAt);
+
   return (
-    <Card>
+    <Card size='lg'>
       <CardBody>
         <Heading size='xs' textTransform='uppercase'>
-          {roomName}
+          {name}
         </Heading>
-        <Text>some message</Text>
       </CardBody>
+      <CardFooter>
+        <Text>{createdAtDate.toLocaleDateString()}</Text>
+      </CardFooter>
     </Card>
   );
 };
