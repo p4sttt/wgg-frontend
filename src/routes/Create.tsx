@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import {
@@ -29,14 +30,14 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { useAuth, useForm } from '~/utils/hooks';
+import { useApi, useAuth, useForm } from '~/utils/hooks';
 import { LoginForm } from '~/widgets';
 
 type Lifetime = '1' | '3' | '7' | 'inf';
 
 interface CreateRoomForm {
   roomName: string;
-  maxUsetsCount: number;
+  maxUsersCount: number;
   lifetime: Lifetime;
 }
 
@@ -44,14 +45,35 @@ export const Create = () => {
   const linkColor = useColorModeValue('teal.500', 'teal.400');
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
 
+  const [isLoading, setIsLoading] = useState(false);
+  const { api } = useApi();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isAuthorized } = useAuth();
+
   const form = useForm<CreateRoomForm>({
     initialValues: {
       roomName: '',
-      maxUsetsCount: 5,
+      maxUsersCount: 5,
       lifetime: '1',
     },
     onSubmit: () => {
-      console.log(form.values);
+      setIsLoading(true);
+
+      api
+        .post('/room', {
+          name: form.values.roomName,
+          maxUsersCount: form.values.maxUsersCount,
+          lifetime: form.values.lifetime,
+        })
+        .then((res) => {
+          console.log(res.data.roomId);
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     },
     validate: () => {
       let isValid = true;
@@ -59,8 +81,8 @@ export const Create = () => {
         form.setFieldError('roomName', 'This is a required field');
         isValid = false;
       }
-      if (!form.values.maxUsetsCount) {
-        form.setFieldError('maxUsetsCount', 'This is a required field');
+      if (!form.values.maxUsersCount) {
+        form.setFieldError('maxUsersCount', 'This is a required field');
         isValid = false;
       }
       if (!form.values.lifetime) {
@@ -72,10 +94,7 @@ export const Create = () => {
     },
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isAuthorized } = useAuth();
-
-  const handleRadioCahnge = (value: Lifetime) => {
+  const handleRadioChange = (value: Lifetime) => {
     if (value == 'inf' && !isAuthorized) {
       onOpen();
     } else {
@@ -106,14 +125,14 @@ export const Create = () => {
               )}
               <FormErrorMessage>{form.errors.roomName}</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!form.errors.maxUsetsCount}>
+            <FormControl isInvalid={!!form.errors.maxUsersCount}>
               <FormLabel>Max Users Count</FormLabel>
               <NumberInput
-                defaultValue={form.values.maxUsetsCount}
+                defaultValue={form.values.maxUsersCount}
                 max={20}
                 min={2}
                 clampValueOnBlur={true}
-                onChange={(count) => form.setFieldValue('maxUsetsCount', Number(count))}
+                onChange={(count) => form.setFieldValue('maxUsersCount', Number(count))}
               >
                 <NumberInputField />
                 <NumberInputStepper>
@@ -121,16 +140,16 @@ export const Create = () => {
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
-              {!form.errors.maxUsetsCount && (
+              {!form.errors.maxUsersCount && (
                 <FormHelperText>
                   Only you and the members of the room will see the name of the room.
                 </FormHelperText>
               )}
-              <FormErrorMessage>{form.errors.maxUsetsCount}</FormErrorMessage>
+              <FormErrorMessage>{form.errors.maxUsersCount}</FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={!!form.errors.lifetime}>
               <FormLabel>Delete Room After</FormLabel>
-              <RadioGroup value={form.values.lifetime} onChange={handleRadioCahnge}>
+              <RadioGroup value={form.values.lifetime} onChange={handleRadioChange}>
                 <VStack justify='start' align='start'>
                   <Radio value='1'>1 day</Radio>
                   <Radio value='3'>3 days</Radio>
@@ -148,7 +167,7 @@ export const Create = () => {
             </FormControl>
           </VStack>
           <VStack align='start' w='100%' mt={4}>
-            <Button colorScheme='blue' w='100%' onClick={form.handleSubmit}>
+            <Button colorScheme='blue' w='100%' onClick={form.handleSubmit} isLoading={isLoading}>
               Create room
             </Button>
             <Text fontSize='sm'>

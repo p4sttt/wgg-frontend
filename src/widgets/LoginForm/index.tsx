@@ -38,6 +38,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess = () => {} }) => {
         password: form.values.password,
       };
       await login(loginData, onSuccess);
+      
 
       setIsLoading(false);
     },

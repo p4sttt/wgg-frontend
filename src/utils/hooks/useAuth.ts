@@ -1,5 +1,5 @@
-import axios from '~/axios';
 import { UserLoginData, UserRegisterData } from '~/types';
+import { useApi } from '~/utils/hooks';
 import { useToken, useUser } from '~/utils/stores';
 
 interface SuccesRespose {
@@ -21,9 +21,10 @@ export const useAuth = () => {
     state.setUser,
     state.removeUser,
   ]);
+  const { api } = useApi();
 
   const login = async (loginData: UserLoginData, callback: () => void = () => {}) => {
-    return axios
+    return api
       .post<SuccesRespose>('/auth/login', loginData)
       .then((res) => {
         setToken(res.data.token);
@@ -44,7 +45,7 @@ export const useAuth = () => {
   };
 
   const signup = async (registerData: UserRegisterData, callback: () => void = () => {}) => {
-    return axios
+    return api
       .post<SuccesRespose>('/auth/register', registerData)
       .then((res) => {
         setToken(res.data.token);
