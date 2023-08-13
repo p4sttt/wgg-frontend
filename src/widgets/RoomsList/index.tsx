@@ -54,10 +54,10 @@ export const RoomsList = () => {
         sm: 2,
         md: 3,
       }}
-      spacing={10}
+      spacing={4}
     >
       {rooms.map((room) => (
-        <RoomCard name={room.name} createdAt={room.createdAt} />
+        <RoomCard key={room.id} name={room.name} createdAt={room.createdAt} roomId={room.id} />
       ))}
     </SimpleGrid>
   );

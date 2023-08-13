@@ -1,4 +1,5 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -15,7 +16,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-import { useForm } from '~/utils/hooks';
+import { useApi, useForm } from '~/utils/hooks';
 
 interface JoinRoomForm {
   username: string;
@@ -25,6 +26,10 @@ interface JoinRoomForm {
 export const Home = () => {
   const linkColor = useColorModeValue('teal.500', 'teal.400');
   const textColor = useColorModeValue('blackAlpha.500', 'whiteAlpha.500');
+
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const { api } = useApi();
 
   const form = useForm<JoinRoomForm>({
     initialValues: {
@@ -45,7 +50,22 @@ export const Home = () => {
       return isValid;
     },
     onSubmit: () => {
-      console.log(form.values);
+      setIsLoading(true);
+
+      api
+        .post('/room/join', {
+          username: form.values.username,
+          roomId: form.values.roomId,
+        })
+        .then(() => {
+          navigate(`/wgg`);
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     },
   });
 
@@ -85,7 +105,7 @@ export const Home = () => {
           </FormControl>
         </VStack>
         <VStack align='start' mt={4} w='100%'>
-          <Button colorScheme='blue' w='100%' onClick={form.handleSubmit}>
+          <Button colorScheme='blue' w='100%' onClick={form.handleSubmit} isLoading={isLoading}>
             Join room
           </Button>
           <Text fontSize='sm'>

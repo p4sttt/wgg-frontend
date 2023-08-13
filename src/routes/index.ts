@@ -5,3 +5,4 @@ export * from './Register';
 export * from './NotFound';
 export * from './Profile';
 export * from './Layout';
+export * from './Room';
