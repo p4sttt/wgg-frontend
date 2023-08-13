@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Edit, Logout, Menu2, Moon, Sun, User } from 'tabler-icons-react';
+import { Edit, Login, Logout, Menu2, Moon, Sun, User } from 'tabler-icons-react';
 
 import {
   Box,
-  Button,
   Container,
   HStack,
   Heading,
@@ -13,11 +12,11 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-  Text,
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react';
 
+import { RequireAuth } from '~/utils/hocs';
 import { useAuth } from '~/utils/hooks';
 
 export const Header = () => {
@@ -42,22 +41,46 @@ export const Header = () => {
               p={2}
             />
             <MenuList>
-              <MenuItem icon={<User strokeWidth={1.5} />} as={Link} to='/profile'>
-                Your Profile
-              </MenuItem>
-              <MenuItem icon={<Edit strokeWidth={1.5} />} as={Link} to='/profile'>
-                Edit Profile
-              </MenuItem>
-              <MenuItem
-                icon={colorMode == 'dark' ? <Moon strokeWidth={1.5} /> : <Sun strokeWidth={1.5} />}
-                onClick={toggleColorMode}
-              >
-                {colorMode == 'dark' ? 'Light theme' : 'Dark theme'}
-              </MenuItem>
-              <MenuDivider />
-              <MenuItem onClick={() => logout()} icon={<Logout strokeWidth={1.5} />}>
-                Log Out
-              </MenuItem>
+              <RequireAuth
+                withAuth={
+                  <>
+                    <MenuItem icon={<User strokeWidth={1.5} />} as={Link} to='/profile'>
+                      Your Profile
+                    </MenuItem>
+                    <MenuItem icon={<Edit strokeWidth={1.5} />} as={Link} to='/profile'>
+                      Edit Profile
+                    </MenuItem>
+                    <MenuItem
+                      icon={
+                        colorMode == 'dark' ? <Moon strokeWidth={1.5} /> : <Sun strokeWidth={1.5} />
+                      }
+                      onClick={toggleColorMode}
+                    >
+                      {colorMode == 'dark' ? 'Light theme' : 'Dark theme'}
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem onClick={() => logout()} icon={<Logout strokeWidth={1.5} />}>
+                      Log Out
+                    </MenuItem>
+                  </>
+                }
+                withoutAuth={
+                  <>
+                    <MenuItem
+                      icon={
+                        colorMode == 'dark' ? <Moon strokeWidth={1.5} /> : <Sun strokeWidth={1.5} />
+                      }
+                      onClick={toggleColorMode}
+                    >
+                      {colorMode == 'dark' ? 'Light theme' : 'Dark theme'}
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem icon={<Login strokeWidth={1.5} />} as={Link} to='/login'>
+                      Login
+                    </MenuItem>
+                  </>
+                }
+              />
             </MenuList>
           </Menu>
         </HStack>
