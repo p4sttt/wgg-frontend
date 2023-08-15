@@ -16,7 +16,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-import { useApi, useForm } from '~/utils/hooks';
+import { useApi, useForm, useSocket } from '~/utils/hooks';
 
 interface JoinRoomForm {
   username: string;
@@ -29,7 +29,7 @@ export const Home = () => {
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const { api } = useApi();
+  const { join } = useSocket();
 
   const form = useForm<JoinRoomForm>({
     initialValues: {
@@ -49,23 +49,17 @@ export const Home = () => {
 
       return isValid;
     },
-    onSubmit: () => {
+    onSubmit: async () => {
       setIsLoading(true);
 
-      api
-        .post('/room/join', {
+      await join(
+        {
           username: form.values.username,
           roomId: form.values.roomId,
-        })
-        .then(() => {
-          navigate(`/wgg`);
-        })
-        .catch((error) => {
-          console.log(error.response.data);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+        },
+        () => navigate('/wgg'),
+      );
+      setIsLoading(false);
     },
   });
 
