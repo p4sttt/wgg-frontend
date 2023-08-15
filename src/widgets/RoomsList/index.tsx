@@ -1,7 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Box } from 'tabler-icons-react';
+import { Link } from 'react-router-dom';
 
-import { Center, SimpleGrid, Skeleton, Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Flex,
+  Heading,
+  SimpleGrid,
+  Skeleton,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 
 import { RoomCard } from '~/components';
 import { Room } from '~/types';
@@ -32,19 +44,42 @@ export const RoomsList = () => {
 
   if (isLoadingCards) {
     return (
-      <VStack>
-        <Skeleton>some text here ahahahah gay</Skeleton>
-      </VStack>
+      <SimpleGrid
+        columns={{
+          sm: 2,
+          md: 3,
+        }}
+        spacing={4}
+      >
+        <Skeleton>
+          <Card size='lg'>
+            <CardHeader>Some text</CardHeader>
+            <CardBody>Another text</CardBody>
+            <CardFooter>Why are you watching?</CardFooter>
+          </Card>
+        </Skeleton>
+        <Skeleton>
+          <Card size='lg'>
+            <CardHeader>No, I'm serious.</CardHeader>
+            <CardBody>Stop looking</CardBody>
+            <CardFooter>Believe me there is nothing interesting here</CardFooter>
+          </Card>
+        </Skeleton>
+      </SimpleGrid>
     );
   }
 
   if (!rooms.length) {
     return (
-      <Box>
-        <Center>
-          <Text>Nothing interesting there</Text>
-        </Center>
-      </Box>
+      <Flex height='sm' >
+          <VStack m='auto'>
+            <Heading size='md'>You don't have any created rooms yet</Heading>
+            <Text>Rather, create your first room and enjoy watching together</Text>
+            <Button as={Link} to='/create'>
+              Create room
+            </Button>
+          </VStack>
+      </Flex>
     );
   }
 

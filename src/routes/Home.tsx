@@ -16,7 +16,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-import { useApi, useForm, useSocket } from '~/utils/hooks';
+import { useAuth, useForm, useSocket } from '~/utils/hooks';
 
 interface JoinRoomForm {
   username: string;
@@ -30,10 +30,11 @@ export const Home = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const { join } = useSocket();
+  const { user } = useAuth();
 
   const form = useForm<JoinRoomForm>({
     initialValues: {
-      username: '',
+      username: user?.username || '',
       roomId: '',
     },
     validate: () => {
