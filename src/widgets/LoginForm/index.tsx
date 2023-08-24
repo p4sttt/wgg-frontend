@@ -11,6 +11,7 @@ import {
   InputGroup,
   InputRightElement,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 
 import { UserLoginData } from '~/types';
@@ -24,23 +25,41 @@ export const LoginForm: FC<LoginFormProps> = ({ onSuccess = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
   const { login } = useAuth();
+  const toast = useToast();
 
   const form = useForm<UserLoginData>({
     initialValues: {
       email: '',
       password: '',
     },
-    onSubmit: async () => {
+    onSubmit: () => {
       setIsLoading(true);
 
       const loginData = {
         email: form.values.email,
         password: form.values.password,
       };
-      await login(loginData, onSuccess);
-      
-
-      setIsLoading(false);
+      login(loginData)
+        .then(() => {
+          onSuccess();
+          toast({
+            title: 'You have successfully logged in',
+            status: 'success',
+            duration: 2500,
+            isClosable: true,
+          });
+        })
+        .catch((error) => {
+          toast({
+            title: `Login error, ${error.response.data.message}`,
+            status: 'error',
+            duration: 2500,
+            isClosable: true,
+          });
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     },
     validate: () => {
       let isValid = true;

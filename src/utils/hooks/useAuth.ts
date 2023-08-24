@@ -23,17 +23,13 @@ export const useAuth = () => {
   ]);
   const { api } = useApi();
 
-  const login = async (loginData: UserLoginData, callback: () => void = () => {}) => {
+  const login = async (loginData: UserLoginData) => {
     return api
       .post<SuccesRespose>('/auth/login', loginData)
       .then((res) => {
         setToken(res.data.token);
         setUser(res.data.user);
-        callback();
       })
-      .catch((error) => {
-        console.error(error.response.data);
-      });
   };
 
   const logout = (callback?: () => void) => {
@@ -44,17 +40,13 @@ export const useAuth = () => {
     }
   };
 
-  const signup = async (registerData: UserRegisterData, callback: () => void = () => {}) => {
+  const signup = async (registerData: UserRegisterData) => {
     return api
       .post<SuccesRespose>('/auth/register', registerData)
       .then((res) => {
         setToken(res.data.token);
         setUser(res.data.user);
-        callback();
       })
-      .catch((error) => {
-        console.error(error.response.data);
-      });
   };
 
   const isAuthorized = !!token;

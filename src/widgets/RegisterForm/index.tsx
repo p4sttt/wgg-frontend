@@ -11,6 +11,7 @@ import {
   InputGroup,
   InputRightElement,
   VStack,
+  useToast,
 } from '@chakra-ui/react';
 
 import { useAuth, useForm } from '~/utils/hooks';
@@ -29,6 +30,7 @@ export const RegisterForm: FC<LoginFormProps> = ({ onSuccess = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
   const { signup } = useAuth();
+  const toast = useToast();
 
   const form = useForm<RegisterData>({
     initialValues: {
@@ -44,9 +46,27 @@ export const RegisterForm: FC<LoginFormProps> = ({ onSuccess = () => {} }) => {
         username: form.values.username,
         password: form.values.password,
       };
-      await signup(registerData, onSuccess);
-
-      setIsLoading(false);
+      signup(registerData)
+        .then(() => {
+          onSuccess();
+          toast({
+            title: 'You have successfully registered',
+            status: 'success',
+            duration: 2500,
+            isClosable: true,
+          });
+        })
+        .catch((error) => {
+          toast({
+            title: `Registration error, ${error.response.data.message}`,
+            status: 'error',
+            duration: 2500,
+            isClosable: true,
+          });
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     },
     validate: () => {
       let isValid = true;

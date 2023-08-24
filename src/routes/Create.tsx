@@ -28,6 +28,7 @@ import {
   VStack,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 
 import { useApi, useAuth, useForm } from '~/utils/hooks';
@@ -49,6 +50,7 @@ export const Create = () => {
   const { api } = useApi();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isAuthorized } = useAuth();
+  const toast = useToast();
 
   const form = useForm<CreateRoomForm>({
     initialValues: {
@@ -66,10 +68,21 @@ export const Create = () => {
           lifetime: form.values.lifetime,
         })
         .then((res) => {
-          console.log(res.data.roomId);
+          toast({
+            title: 'You have successfully created a room',
+            description: `room id: ${res.data.roomId}`,
+            status: 'success',
+            duration: 2500,
+            isClosable: true,
+          });
         })
         .catch((error) => {
-          console.log(error.response.data);
+          toast({
+            title: error.response.data.message,
+            status: 'error',
+            duration: 2500,
+            isClosable: true,
+          });
         })
         .finally(() => {
           setIsLoading(false);
